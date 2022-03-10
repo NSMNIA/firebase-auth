@@ -1,55 +1,38 @@
-import React, { useState, useEffect } from 'react'
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { auth, signInWithEmailAndPassword } from '../../config/firebase';
+import Logging from '../../config/Loggings';
 
-const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [user, loading, error] = useAuthState(auth);
-  const navigate = useNavigate();
+const Login: React.FunctionComponent = props => {
+    const [authenticating, setAuthenticating] = useState<boolean>(false);
+    const [email, setEmail] = useState<string>('');
+    const [password,setPassword] = useState<string>('');
+    const [error,setError] = useState<string>('');
 
-   useEffect(() => {
-    if (loading) {
-      // maybe trigger a loading screen
-      return;
+    const history = useNavigate();
+
+    const signIn = () => {
+        if(error!=='') setError('')
+        setAuthenticating(true);
+        signInWithEmailAndPassword(auth, email, password).then(result => {
+            Logging.info(result);
+            history('/');
+        }).catch(err => {
+            Logging.error(err);
+            setAuthenticating(false);
+            setError('Unable to sign in. Please try again later.')
+        })
     }
-    if (user) navigate("/app");
-  }, [user, loading]);
 
-  return (
-    <div className="login">
-      <div className="login__container">
-        <input
-          type="text"
-          className="login__textBox"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="E-mail Address"
-        />
-        <input
-          type="password"
-          className="login__textBox"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-        />
-        <button
-          className="login__btn"
-          onClick={() => logInWithEmailAndPassword(email, password)}
-        >
-          Login
-        </button>
-        <button className="login__btn login__google" onClick={signInWithGoogle}>
-          Login with Google
-        </button>
-        <div>
-          <Link to="/reset">Forgot Password</Link>
-        </div>
-        <div>
-          Don't have an account? <Link to="/register">Register</Link> now.
-        </div>
-      </div>
-    </div>
-  );
+    return (
+        <>
+            <form>
+                <input type="email" name='email' value={email} placeholder="Email address" onChange={e => setEmail(e.target.value)} />
+                <input type="password" name='password' value={password} placeholder="Password" onChange={e => setPassword(e.target.value)} />
+                <button disabled={authenticating} onClick={e=>{e.preventDefault(); signIn()}}>Log in</button>
+            </form>
+        </>
+    );
 }
 
-export default Login
+export default Login;
