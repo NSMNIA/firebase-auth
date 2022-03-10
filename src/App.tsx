@@ -4,6 +4,7 @@ import routes from './config/Routes';
 import AuthRoute from './components/AuthRoute';
 import { auth, onAuthStateChanged } from './config/firebase';
 import Logging from './config/Loggings';
+import NotFound from './pages/NotFound';
 
 const App: React.FunctionComponent = props => {
     const [loading, setLoading] = useState<boolean>(true);
@@ -39,6 +40,7 @@ const App: React.FunctionComponent = props => {
                         />
                     }
                     )}
+                    <Route path='*' element={<NotFound/>}/>
                 </Routes>
             </Router>
         </>
