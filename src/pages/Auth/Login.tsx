@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from "react-router-dom";
-import { auth, logInWithEmailAndPassword, signInWithGoogle } from "../../firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -14,7 +12,7 @@ const Login = () => {
       // maybe trigger a loading screen
       return;
     }
-    if (user) navigate("/dashboard");
+    if (user) navigate("/app");
   }, [user, loading]);
 
   return (
