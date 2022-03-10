@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth, createUserWithEmailAndPassword } from '../../config/firebase';
+import ErrorText from '../../components/ErrorText';
+import { auth, createUserWithEmailAndPassword, onAuthStateChanged } from '../../config/firebase';
 import Logging from '../../config/Loggings';
 
 const Register: React.FunctionComponent = props => {
@@ -32,6 +33,12 @@ const Register: React.FunctionComponent = props => {
         })
     }
 
+    useEffect(() => {
+        onAuthStateChanged(auth, user => {
+            if (user) return history('/');
+        })
+    }, []);
+
     return (
         <>
             <form>
@@ -41,6 +48,7 @@ const Register: React.FunctionComponent = props => {
                 <button disabled={registering} type='submit' onClick={e => {e.preventDefault(); signUpWithEmailAndPassword()} }>
                     Sign up
                 </button>
+                <ErrorText error={error} />
             </form>
         </>
     );

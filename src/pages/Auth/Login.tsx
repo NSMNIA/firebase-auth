@@ -1,7 +1,8 @@
 import { AuthProvider } from 'firebase/auth';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth, signInWithEmailAndPassword, Providers } from '../../config/firebase';
+import ErrorText from '../../components/ErrorText';
+import { auth, signInWithEmailAndPassword, Providers, onAuthStateChanged } from '../../config/firebase';
 import Logging from '../../config/Loggings';
 import { SignInWithSocialMedia } from './modules';
 
@@ -23,7 +24,11 @@ const Login: React.FunctionComponent = props => {
             Logging.error(err);
             if(err.code.includes('auth/invalid-email')){
                 setError('Invalid email.')
-            }else{
+            } else if (err.code.includes('auth/wrong-password')){
+                setError('Invalid password.');
+            } else if (err.code.includes('auth/user-not-found')){
+                setError('Email does not exist in our database.');
+            } else{
                 setError('Unable to sign in. Please try again later.')
             }
             setAuthenticating(false);
@@ -45,6 +50,12 @@ const Login: React.FunctionComponent = props => {
         })
     }
 
+    useEffect(()=> {
+        onAuthStateChanged(auth, user => {
+            if (user) return history('/');
+        })
+    }, []);
+
     return (
         <>
             <form>
@@ -56,7 +67,7 @@ const Login: React.FunctionComponent = props => {
                     Login via Google
                 </button>
 
-
+                <ErrorText error={error}/>
             </form>
         </>
     );
