@@ -1,4 +1,5 @@
 import IRoute from "../interfaces/Routes";
+import ChangePassword from "../pages/Auth/Change";
 import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
 import HomePage from "../pages/Home";
@@ -21,6 +22,12 @@ const routes: IRoute[] = [
         element: Login,
         name: 'Login Page',
         protected: false
+    },
+    {
+        path: '/password/change',
+        element: ChangePassword,
+        name: 'Change Password Page',
+        protected: true
     }
 ];
 

@@ -1,0 +1,11 @@
+.alert{
+    font-family: inherit;
+    display: flex;
+    width: fit-content;
+    padding: 1em 1.15em;
+    border-radius: .5em;
+    &.alert--danger{
+        background: hsla(0, 100%, 50%, .15);
+        color: hsla(0, 100%, 50%, 1);
+    }
+}
