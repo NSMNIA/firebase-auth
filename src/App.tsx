@@ -21,7 +21,7 @@ const App: React.FunctionComponent = props => {
     }, [])
 
     if(loading)
-        return "Laden...";
+        return <div>Laden..</div>;
 
     return (
         <>
