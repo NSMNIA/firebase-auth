@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { RouteProps, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import Logging from '../../config/Loggings';
-import { auth, verifyPasswordResetCode, confirmPasswordReset } from '../../config/firebase';
+import { auth, verifyPasswordResetCode, confirmPasswordReset, onAuthStateChanged } from '../../config/firebase';
 
 const ResetPassword: React.FunctionComponent<RouteProps> = props => {
     let location = useLocation();
@@ -34,6 +34,10 @@ const ResetPassword: React.FunctionComponent<RouteProps> = props => {
             setVerified(false);
             setVerifying(false);
         }
+
+        onAuthStateChanged(auth, user => {
+            if (user) return history('/');
+        })
     }, [])
 
     const verifyPasswordResetLink = (_oobCode: string) => {
